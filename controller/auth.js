@@ -21,18 +21,57 @@ export async function register (req, res, next) {
             }
         });
 
-        const token = jwt.sign({userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' })
+        const token = jwt.sign({userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
-        res.json({
+        return res.status(200).cookie('token', token).json({
             success: true,
-            user: user,
-            token
+            userId: user.id,
         });
 
     } catch (error) {
-        res.json({
+        return res.json({
             success: false,
             message: error
         })
+    }
+}
+
+export async function login (req, res, next) {
+
+    try {
+        const {email, password} = req.body;
+
+        const user = await prisma.user.findUnique({
+            where: { email }
+        });
+
+        if (!user) {
+            return res.status(401).json({
+                success: false,
+                message: 'User not found'
+            })
+        }
+
+        const isMatch = await bcryptjs.compare(password, user.password);
+        if (!isMatch) {
+          return res.status(401).json({
+            success: false,
+            message: 'Invalid credentials'
+          });
+        }
+
+        const token = jwt.sign({userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' })
+
+        return res.status(200).cookie('token', token).json({
+            success: true,
+            userId: user.id,
+        });
+
+
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: error
+        });
     }
 }
