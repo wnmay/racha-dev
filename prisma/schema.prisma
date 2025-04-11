@@ -12,10 +12,10 @@ datasource db {
 }
 
 model User {
-  id              Int               @id @default(autoincrement())
+  id              Int              @id @default(autoincrement())
   name            String
   tel             String
-  email           String
+  email           String           @unique
   password        String
   reviewsMasseuse ReviewMasseuse[]
   reviewsShop     ReviewShop[]
@@ -23,32 +23,30 @@ model User {
 }
 
 model Masseuse {
-  id              Int               @id @default(autoincrement())
+  id              Int              @id @default(autoincrement())
   name            String
-  rating          Float
-  shop            Shop              @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  shop            Shop             @relation(fields: [shopId], references: [id], onDelete: Cascade)
   shopId          Int
   reservations    Reservation[]
   reviewsMasseuse ReviewMasseuse[]
 }
 
 model Shop {
-  id             Int               @id @default(autoincrement())
-  name           String
-  rating         Float
-  masseuses      Masseuse[]
-  reservations   Reservation[]
-  reviewsShop    ReviewShop[]
+  id           Int           @id @default(autoincrement())
+  name         String
+  masseuses    Masseuse[]
+  reservations Reservation[]
+  reviewsShop  ReviewShop[]
 }
 
 model Reservation {
-  id              Int       @id @default(autoincrement())
+  id              Int      @id @default(autoincrement())
   reservationTime DateTime
-  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId          Int
-  shop            Shop      @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  shop            Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
   shopId          Int
-  masseuse        Masseuse  @relation(fields: [masseuseId], references: [id], onDelete: Cascade)
+  masseuse        Masseuse @relation(fields: [masseuseId], references: [id], onDelete: Cascade)
   masseuseId      Int
 }
 
