@@ -1,0 +1,71 @@
+// Prisma schema file
+// Learn more: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              Int              @id @default(autoincrement())
+  name            String
+  tel             String
+  email           String           @unique
+  password        String
+  reviewsMasseuse ReviewMasseuse[]
+  reviewsShop     ReviewShop[]
+  reservations    Reservation[]
+}
+
+model Masseuse {
+  id              Int              @id @default(autoincrement())
+  name            String
+  shop            Shop             @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  shopId          Int
+  reservations    Reservation[]
+  reviewsMasseuse ReviewMasseuse[]
+}
+
+model Shop {
+  id           Int           @id @default(autoincrement())
+  name         String
+  masseuses    Masseuse[]
+  reservations Reservation[]
+  reviewsShop  ReviewShop[]
+}
+
+model Reservation {
+  id              Int      @id @default(autoincrement())
+  reservationTime DateTime
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId          Int
+  shop            Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  shopId          Int
+  masseuse        Masseuse @relation(fields: [masseuseId], references: [id], onDelete: Cascade)
+  masseuseId      Int
+}
+
+model ReviewMasseuse {
+  id         Int      @id @default(autoincrement())
+  rating     Int
+  comment    String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     Int
+  masseuse   Masseuse @relation(fields: [masseuseId], references: [id], onDelete: Cascade)
+  masseuseId Int
+}
+
+model ReviewShop {
+  id      Int    @id @default(autoincrement())
+  rating  Int
+  comment String
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId  Int
+  shop    Shop   @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  shopId  Int
+}

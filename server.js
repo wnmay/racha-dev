@@ -1,9 +1,16 @@
 import express from 'express'
-import auth from './routes/auth'
+import cookieParser from 'cookie-parser';
+import dotenv from 'dotenv';
+import auth from './routes/auth.js'
+
+dotenv.config();
 
 const app = express();
+app.use(express.json());
+app.use(cookieParser());
 
 app.use('/auth', auth);
+
 
 const PORT = 5000;
 
