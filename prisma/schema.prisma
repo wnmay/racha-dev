@@ -16,7 +16,7 @@ model User {
   tel             String
   email           String           @unique
   password        String
-  role            UserRole         @default(ADMIN)
+  role            UserRole         @default(CUSTOMER)
   reviewsMasseuse ReviewMasseuse[]
   reviewsShop     ReviewShop[]
   reservations    Reservation[]

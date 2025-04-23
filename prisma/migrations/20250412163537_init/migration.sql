@@ -1,3 +1,6 @@
+-- CreateEnum
+CREATE TYPE "UserRole" AS ENUM ('CUSTOMER', 'ADMIN');
+
 -- CreateTable
 CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
@@ -5,6 +8,7 @@ CREATE TABLE "User" (
     "tel" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
+    "role" "UserRole" NOT NULL DEFAULT 'ADMIN',
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -22,6 +26,10 @@ CREATE TABLE "Masseuse" (
 CREATE TABLE "Shop" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
+    "address" TEXT NOT NULL,
+    "tel" TEXT NOT NULL,
+    "openTime" TIMESTAMP(3) NOT NULL,
+    "closeTime" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Shop_pkey" PRIMARY KEY ("id")
 );
