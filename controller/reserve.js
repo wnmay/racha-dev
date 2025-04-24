@@ -78,7 +78,14 @@ export async function getAllReservations(req, res, next) {
 
 export async function createReservation(req, res, next) {
   const userId = req.user.id;
+  const userRole = req.user.role;
   const { reservationTime, shopId, masseuseId } = req.body;
+  if (userRole === "ADMIN") {
+    return res.status(403).json({
+      success: false,
+      message: "Admins are not allowed to create reservations.",
+    });
+  }
 
   try {
     const reservationCount = await prisma.reservation.count({
