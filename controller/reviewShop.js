@@ -41,7 +41,7 @@ export async function getReviewShop(req, res, next) {
 
 export async function createReviewShop(req, res, next) {
   try {
-    const userId = req.userId;
+    const userId = req.user.id;
 
     if (!userId) {
       return res.status(401).json({
@@ -112,7 +112,7 @@ export async function createReviewShop(req, res, next) {
 }
 
 export async function editReviewShop(req, res, next) {
-  const userId = req.userId;
+  const userId = req.user.id;
   const { rating, comment } = req.body;
   const reviewShopId = parseInt(req.params.id, 10);
   console.log(reviewShopId);
@@ -165,7 +165,7 @@ export async function editReviewShop(req, res, next) {
 }
 
 export async function deleteReviewShop(req, res, next) {
-  const userId = req.userId;
+  const userId = req.user.id;
   const reviewShopId = parseInt(req.params.id, 10);
 
   try {

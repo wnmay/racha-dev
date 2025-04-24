@@ -41,7 +41,7 @@ export async function getReviewMasseuse(req, res, next) {
 
 export async function createReviewMasseuse(req, res, next) {
   try {
-    const userId = req.userId;
+    const userId = req.user.id;
     if (!userId) {
       return res.status(401).json({
         success: false,
@@ -112,7 +112,7 @@ export async function createReviewMasseuse(req, res, next) {
 }
 
 export async function editReviewMasseuse(req, res, next) {
-  const userId = req.userId;
+  const userId = req.user.id;
   const { rating, comment } = req.body;
   const reviewMasseuseId = parseInt(req.params.id, 10);
 
@@ -164,7 +164,7 @@ export async function editReviewMasseuse(req, res, next) {
 }
 
 export async function deleteReviewMasseuse(req, res, next) {
-  const userId = req.userId;
+  const userId = req.user.id;
   const reviewMasseuseId = parseInt(req.params.id, 10);
 
   try {
