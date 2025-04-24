@@ -1,6 +1,6 @@
 import prisma from "../prismaClient.js";
 
-export async function getReservations(req, res, next) {
+export async function getUserReservations(req, res, next) {
   const userId = req.user.id;
 
   try {
