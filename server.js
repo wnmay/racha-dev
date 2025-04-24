@@ -5,6 +5,7 @@ import auth from "./routes/auth.js";
 import reviewShop from "./routes/reviewShop.js";
 import reviewMasseuse from "./routes/reviewMasseuse.js";
 import reserve from "./routes/reserve.js";
+import shop from "./routes/shop.js";
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ app.use("/auth", auth);
 app.use("/reviewShop", reviewShop);
 app.use("/reviewMasseuse", reviewMasseuse);
 app.use("/reserve", reserve);
+app.use("/shop", shop);
 const PORT = 5000;
 
 app.listen(PORT, () => {
