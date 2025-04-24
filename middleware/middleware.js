@@ -14,7 +14,9 @@ export async function protect(req, res, next) {
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.userId = decoded.userId;
+        req.user = await prisma.user.findUnique({
+            where : {id : decoded.userId}
+        });
 
         next();
     } catch (error) {
@@ -29,9 +31,8 @@ export async function protect(req, res, next) {
 export async function authorize(req, res, next) {
     
     try {
-        
         const user = await prisma.user.findUnique({
-            where: { id: req.userId },
+            where: { id: req.user.id },
         });
         if (!user) {
             return res.status(401).json({
@@ -52,7 +53,7 @@ export async function authorize(req, res, next) {
 
     } catch (error) {
         console.log('Authorization Error: ', error);
-        return res.status(401).json({
+        return res.status(403).json({
             success: false,
             message: 'Authorization failed'
         });
