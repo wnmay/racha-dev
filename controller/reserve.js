@@ -22,6 +22,7 @@ export async function getReservations(req, res, next) {
 
 export async function getReservation(req, res, next) {
   const userId = req.user.id;
+
   const reservationId = parseInt(req.params.id, 10);
 
   try {
@@ -31,12 +32,18 @@ export async function getReservation(req, res, next) {
     const reservation = await prisma.reservation.findUnique({
       where: { id: reservationId },
     });
-    console.log(user.role);
 
     if (user.role != "ADMIN" && user.id != reservation.userId) {
       return res.status(403).json({
         success: false,
         message: "User is not authorized",
+      });
+    }
+
+    if (!reservation) {
+      return res.status(404).json({
+        success: false,
+        message: `No reservation with the id of ${reservationId}`,
       });
     }
 
