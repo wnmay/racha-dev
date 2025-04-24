@@ -41,8 +41,8 @@ export async function getReviewShop(req, res, next) {
 
 export async function createReviewShop(req, res, next) {
   try {
-    const userId = parseInt(req.userId, 10);
-    console.log(userId);
+    const userId = req.userId;
+
     if (!userId) {
       return res.status(401).json({
         success: false,
@@ -51,10 +51,42 @@ export async function createReviewShop(req, res, next) {
     }
 
     const { shopId, rating, comment } = req.body;
-    if (!shopId) {
+
+    const shop = await prisma.shop.findUnique({ where: { id: shopId } });
+    if (!shop) {
       return res.status(404).json({
         success: false,
         message: "Massage shop not found",
+      });
+    }
+
+    const hasReservation = await prisma.reservation.findFirst({
+      where: {
+        userId,
+        shopId,
+      },
+    });
+
+    if (!hasReservation) {
+      return res.status(403).json({
+        success: false,
+        message: "You must have a reservation before reviewing this shop",
+      });
+    }
+
+    const existingReview = await prisma.reviewShop.findFirst({
+      where: { userId, shopId },
+    });
+
+    if (existingReview) {
+      const updated = await prisma.reviewShop.update({
+        where: { id: existingReview.id },
+        data: { rating, comment },
+      });
+      return res.status(200).json({
+        success: true,
+        reviewShop: updated,
+        updated: true,
       });
     }
 
@@ -72,8 +104,6 @@ export async function createReviewShop(req, res, next) {
       reviewShop,
     });
   } catch (error) {
-    console.log(error);
-
     return res.status(500).json({
       success: false,
       message: "Internal server error",
@@ -85,6 +115,7 @@ export async function editReviewShop(req, res, next) {
   const userId = req.userId;
   const { rating, comment } = req.body;
   const reviewShopId = parseInt(req.params.id, 10);
+  console.log(reviewShopId);
 
   let updateData = {};
   if (rating !== undefined) updateData.rating = rating;
