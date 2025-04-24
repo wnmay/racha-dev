@@ -74,22 +74,6 @@ export async function createReviewMasseuse(req, res, next) {
       });
     }
 
-    const existingReview = await prisma.reviewMasseuse.findFirst({
-      where: { userId, masseuseId },
-    });
-
-    if (existingReview) {
-      const updated = await prisma.reviewMasseuse.update({
-        where: { id: existingReview.id },
-        data: { rating, comment },
-      });
-      return res.status(200).json({
-        success: true,
-        reviewMasseuse: updated,
-        updated: true,
-      });
-    }
-
     const reviewMasseuse = await prisma.reviewMasseuse.create({
       data: {
         rating,

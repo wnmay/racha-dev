@@ -74,22 +74,6 @@ export async function createReviewShop(req, res, next) {
       });
     }
 
-    const existingReview = await prisma.reviewShop.findFirst({
-      where: { userId, shopId },
-    });
-
-    if (existingReview) {
-      const updated = await prisma.reviewShop.update({
-        where: { id: existingReview.id },
-        data: { rating, comment },
-      });
-      return res.status(200).json({
-        success: true,
-        reviewShop: updated,
-        updated: true,
-      });
-    }
-
     const reviewShop = await prisma.reviewShop.create({
       data: {
         rating,
