@@ -4,6 +4,22 @@ import prisma from "../prismaClient.js";
 
 export async function register(req, res, next) {
   const { name, tel, email, password, role } = req.body;
+
+  const emailFormat = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailFormat.test(email)) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid email format",
+    });
+  }
+
+  const telFormat = /^0[0-9]{9}$/;
+  if (!telFormat.test(tel)) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid telephone number format",
+    });
+  }
   const salt = await bcryptjs.genSalt();
   const hashedPassword = await bcryptjs.hash(password, salt);
 
