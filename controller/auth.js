@@ -111,3 +111,21 @@ export async function login(req, res, next) {
     });
   }
 }
+
+export async function logout(req, res, next) {
+  try {
+    res.cookie("token", "none", {
+      expires: new Date(Date.now() + 10 * 1000),
+      httpOnly: true,
+    });
+    res.status(200).json({
+      success: true,
+      data: {},
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: "Logout error",
+    });
+  }
+}
