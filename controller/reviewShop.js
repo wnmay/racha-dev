@@ -41,8 +41,8 @@ export async function getReviewShop(req, res, next) {
 
 export async function createReviewShop(req, res, next) {
   try {
-    const userId = req.user?.id;
-
+    const userId = parseInt(req.userId, 10);
+    console.log(userId);
     if (!userId) {
       return res.status(401).json({
         success: false,
@@ -72,14 +72,17 @@ export async function createReviewShop(req, res, next) {
       reviewShop,
     });
   } catch (error) {
+    console.log(error);
+
     return res.status(500).json({
       success: false,
+      message: "Internal server error",
     });
   }
 }
 
 export async function editReviewShop(req, res, next) {
-  const userId = req.user.id;
+  const userId = req.userId;
   const { rating, comment } = req.body;
   const reviewShopId = parseInt(req.params.id, 10);
 
@@ -131,7 +134,7 @@ export async function editReviewShop(req, res, next) {
 }
 
 export async function deleteReviewShop(req, res, next) {
-  const userId = req.user.id;
+  const userId = req.userId;
   const reviewShopId = parseInt(req.params.id, 10);
 
   try {
