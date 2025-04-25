@@ -4,6 +4,12 @@ import prisma from "../prismaClient.js";
 
 export async function register(req, res, next) {
   const { name, tel, email, password, role } = req.body;
+  if (!name || !tel || !email || !password || !role) {
+    return res.status(400).json({
+      success: false,
+      message: "All fields are required",
+    });
+  }
 
   const emailFormat = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailFormat.test(email)) {
