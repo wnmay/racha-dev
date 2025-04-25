@@ -143,13 +143,18 @@ export async function editReservation(req, res, next) {
   }
 
   try {
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-    });
     const reservation = await prisma.reservation.findUnique({
       where: { id: reservationId },
     });
-
+    if (!reservation) {
+      return res.status(404).json({
+        success: false,
+        message: `No reservation with the id of ${reservationId}`,
+      });
+    }
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    });
     if (user.role != "ADMIN" && userId != reservation.userId) {
       return res.status(403).json({
         success: true,
@@ -177,13 +182,18 @@ export async function editReservation(req, res, next) {
 export async function deleteReservation(req, res, next) {
   const userId = req.user.id;
   const reservationId = parseInt(req.params.id, 10);
-
   try {
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-    });
     const reservation = await prisma.reservation.findUnique({
       where: { id: reservationId },
+    });
+    if (!reservation) {
+      return res.status(404).json({
+        success: false,
+        message: `No reservation with the id of ${reservationId}`,
+      });
+    }
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
     });
 
     if (user.role != "ADMIN" && userId != reservation.userId) {
