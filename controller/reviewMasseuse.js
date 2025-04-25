@@ -42,12 +42,6 @@ export async function getReviewMasseuse(req, res, next) {
 export async function createReviewMasseuse(req, res, next) {
   try {
     const userId = req.user.id;
-    if (!userId) {
-      return res.status(401).json({
-        success: false,
-        message: "Unauthorized: user not authenticated",
-      });
-    }
 
     const { masseuseId, rating, comment } = req.body;
     const masseuse = await prisma.masseuse.findUnique({

@@ -42,14 +42,6 @@ export async function getReviewShop(req, res, next) {
 export async function createReviewShop(req, res, next) {
   try {
     const userId = req.user.id;
-
-    if (!userId) {
-      return res.status(401).json({
-        success: false,
-        message: "Unauthorized: user not authenticated",
-      });
-    }
-
     const { shopId, rating, comment } = req.body;
 
     const shop = await prisma.shop.findUnique({ where: { id: shopId } });
