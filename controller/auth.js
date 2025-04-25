@@ -101,6 +101,7 @@ export async function login(req, res, next) {
 
     return res.status(200).cookie("token", token).json({
       success: true,
+      token,
       userId: user.id,
     });
   } catch (error) {
